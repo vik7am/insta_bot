@@ -1,8 +1,23 @@
 import requests
-BASE_URL = 'https://api.instagram.com/v1/'
-ACCESS_TOKEN = '**********'
+from token import  ACCESS_TOKEN
 
-url = BASE_URL + 'users/self/?access_token=%s' % ACCESS_TOKEN
-print "URL:"+url
-user_info = requests.get(url).json()
-print user_info
+BASE_URL = 'https://api.instagram.com/v1/'
+
+def get_self_info():
+    url = BASE_URL + "users/self/?access_token=" + ACCESS_TOKEN
+    print "URL: "+url
+    self_info = requests.get(url).json()
+
+    if self_info["meta"]["code"] == 200:
+        if len(self_info["data"]):
+            print "Username: " +self_info["data"]["username"]
+            print "Posts: " + str(self_info["data"]["counts"]["media"])
+            print "Followers: " +str(self_info["data"]["counts"]["followed_by"])
+            print "Following: " +str(self_info["data"]["counts"]["follows"])
+
+        else:
+            print "Incorrect Username"
+    else:
+        print "Error: "+self_info["meta"]["code"]
+
+get_self_info()
