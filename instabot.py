@@ -1,5 +1,5 @@
 import requests
-from token import  ACCESS_TOKEN
+from token import ACCESS_TOKEN
 
 BASE_URL = 'https://api.instagram.com/v1/'
 
@@ -20,4 +20,17 @@ def get_self_info():
     else:
         print "Error: "+self_info["meta"]["code"]
 
+def get_user_id(username):
+    url = BASE_URL + "users/search?q="+username+"&access_token=" +ACCESS_TOKEN
+    print "URL:"+url
+    user_info = requests.get(url).json()
+    if user_info["meta"]["code"] == 200:
+        if len(user_info["data"]):
+            return user_info["data"][0]["id"]
+        else:
+            return "User not Found"
+    else:
+        print "Error"+user_info["meta"]["code"]
+
 get_self_info()
+print str(get_user_id("vik7am"))
