@@ -1,145 +1,11 @@
-import requests, urllib
-from token import ACCESS_TOKEN
-
+from id_manager import get_self_info,get_user_id
+from post_manager import get_self_post,get_other_post
+from lc_manager import get_media_likes,like_a_post,get_comment_list,post_a_comment
+from hashtag_manager import get_image_with_hashtag
 BASE_URL = "https://api.instagram.com/v1/"
-
-def get_self_info():
-    url = BASE_URL + "users/self/?access_token=" + ACCESS_TOKEN
-    self_info = requests.get(url).json()
-
-    if self_info["meta"]["code"] == 200:
-        if len(self_info["data"]):
-            print "Username: " +self_info["data"]["username"]
-            print "Posts: " + str(self_info["data"]["counts"]["media"])
-            print "Followers: " +str(self_info["data"]["counts"]["followed_by"])
-            print "Following: " +str(self_info["data"]["counts"]["follows"])
-
-        else:
-            print "Incorrect Username"
-    else:
-        print "Error: "+self_info["meta"]["code"]
-
-def get_user_id(username):
-    url = BASE_URL + "users/search?q="+username+"&access_token=" +ACCESS_TOKEN
-    user_info = requests.get(url).json()
-
-    if user_info["meta"]["code"] == 200:
-        if len(user_info["data"]):
-            return user_info["data"][0]["id"]
-        else:
-            return "User not Found"
-    else:
-        print "Error"+user_info["meta"]["code"]
-
-def get_self_post():
-    url = BASE_URL + "users/self/media/recent/?access_token="+ ACCESS_TOKEN
-    self_media = requests.get(url).json()
-    
-    if self_media["meta"]["code"] == 200:
-        if len(self_media["data"]):
-            image_id = self_media["data"][0]["id"]
-            image_url = self_media["data"][0]["images"]["standard_resolution"]["url"]
-            urllib.urlretrieve(image_url, image_id + ".jpeg")
-            return image_id
-        else:
-            print "Post does not exist!"
-            return 0
-    else:
-        print "Status code other than 200 received!"
-        return 0
-    
-
-def get_other_post(user_id):
-    url = BASE_URL + "users/"+user_id+"/media/recent/?access_token="+ ACCESS_TOKEN
-    self_media = requests.get(url).json()
-
-    if self_media["meta"]["code"] == 200:
-        if len(self_media["data"]):
-            image_id = self_media["data"][0]["id"]
-            image_url = self_media["data"][0]["images"]["standard_resolution"]["url"]
-            urllib.urlretrieve(image_url, image_id + ".jpeg")
-            return image_id
-        else:
-            print "Post does not exist!"
-            return 0
-    else:
-        print "Error" + self_media["meta"]["code"]
-        return 0
-
-def get_media_likes():
-    url = BASE_URL + "users/self/media/liked/?access_token=" + ACCESS_TOKEN
-    self_media = requests.get(url).json()
-
-    if self_media["meta"]["code"] == 200:
-        if len(self_media["data"]):
-            image_id = self_media["data"][0]["id"]
-            image_url = self_media["data"][0]["images"]["standard_resolution"]["url"]
-            urllib.urlretrieve(image_url, image_id + ".jpeg")
-            return image_id
-        else:
-            print "No Recent liked Media found"
-            return 0
-    else:
-        print "Error" + self_media["meta"]["code"]
-        return 0
-
-def get_post_id(username):
-    user_id = get_user_id(username)
-    if user_id == None:
-        print "User does not exist!"
-        return None
-    url = BASE_URL + "users/"+user_id+"/media/recent/?access_token="+ ACCESS_TOKEN
-
-    user_media = requests.get(url).json()
-    if user_media["meta"]["code"] == 200:
-        if len(user_media["data"]):
-            return user_media["data"][0]["id"]
-        else:
-            print "No Recent liked Media found"
-            return None
-    else:
-        print "Error" + user_media["meta"]["code"]
-        return None
-
-def like_a_post(username):
-    media_id = get_post_id(username)
-    if media_id==None:
-        return
-    url = BASE_URL + "media/" + media_id+ "/likes"
-    payload = {"access_token": ACCESS_TOKEN}
-    post_a_like = requests.post(url, payload).json()
-    if post_a_like["meta"]["code"] == 200:
-        print "Like successful"
-    else:
-        print "Like unsuccessful"
-
-def get_comment_list(username):
-    media_id = get_post_id(username)
-    url = BASE_URL + "media/" + media_id + "/comments?access_token="+ACCESS_TOKEN
-    user_media = requests.get(url).json()
-    if user_media["meta"]["code"] == 200:
-        for comment in user_media["data"]:
-            print comment["text"]+"\n"
-    else:
-        print "Error"
-
-
-
-def post_a_comment(username):
-    media_id = get_post_id(username)
-    comment = raw_input("Your comment: ")
-    payload = {"access_token": ACCESS_TOKEN, "text" : comment}
-    url = BASE_URL + "media/"+media_id+"/comments"
-    make_comment = requests.post(url, payload).json()
-    if make_comment['meta']['code'] == 200:
-        print "added a new comment!"
-    else:
-        print "Failed"
-
 
 def home():
     running=True
-
     while running:
         print "1.Get Self info "
         print "2.Get Other User ID"
@@ -149,12 +15,13 @@ def home():
         print "6.Like a Post"
         print "7.Get List of comments"
         print "8.Comment on a Post"
+        print "9.Get no of post with hash tag"
         choice=raw_input("")
         if choice=="1":
             get_self_info()
         elif choice=="2":
-            user=raw_input("Enter Username:")
-            print str(get_user_id(user))
+            username=raw_input("Enter Username:")
+            print str(get_user_id(username))
         elif choice=="3":
             image_id=get_self_post()
             print "Downloaded "+str(image_id)+".jpg"
@@ -174,8 +41,11 @@ def home():
         elif choice == "8":
             username = raw_input("Enter UserName: ")
             post_a_comment(username)
+        elif choice == "9":
+            username = raw_input("Enter UserName: ")
+            hashtag = raw_input("Enter Hashtag: ")
+            get_image_with_hashtag(username,hashtag)
         else:
             running=False
         print "\n"
-
 home()
