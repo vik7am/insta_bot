@@ -22,6 +22,7 @@ def get_self_info():
 def get_user_id(username):
     url = BASE_URL + "users/search?q="+username+"&access_token=" +ACCESS_TOKEN
     user_info = requests.get(url).json()
+
     if user_info["meta"]["code"] == 200:
         if len(user_info["data"]):
             return user_info["data"][0]["id"]
@@ -82,6 +83,36 @@ def get_media_likes():
         print "Error" + self_media["meta"]["code"]
         return 0
 
+def get_post_id(username):
+    user_id = get_user_id(username)
+    if user_id == None:
+        print "User does not exist!"
+        return None
+    url = BASE_URL + "users/"+user_id+"/media/recent/?access_token="+ ACCESS_TOKEN
+
+    user_media = requests.get(url).json()
+    if user_media["meta"]["code"] == 200:
+        if len(user_media["data"]):
+            return user_media["data"][0]["id"]
+        else:
+            print "No Recent liked Media found"
+            return None
+    else:
+        print "Error" + user_media["meta"]["code"]
+        return None
+
+def like_a_post(username):
+    media_id = get_post_id(username)
+    if media_id==None:
+        return
+    url = BASE_URL + "media/" + media_id+ "/likes"
+    payload = {"access_token": ACCESS_TOKEN}
+    post_a_like = requests.post(url, payload).json()
+    if post_a_like["meta"]["code"] == 200:
+        print "Like successful"
+    else:
+        print "Like unsuccessful"
+
 
 def home():
     running=True
@@ -92,6 +123,7 @@ def home():
         print "3.Get Self Post"
         print "4.Get Other Post"
         print "5.Get recent media liked by the user"
+        print "6.Like a Post"
         choice=raw_input("")
         if choice=="1":
             get_self_info()
@@ -108,6 +140,9 @@ def home():
         elif choice == "5":
             id=get_media_likes()
             print "Downloaded " + str(id) + ".jpg"
+        elif choice == "6":
+            user_id = raw_input("Enter UserName: ")
+            like_a_post(user_id)
         else:
             running=False
         print "\n"
