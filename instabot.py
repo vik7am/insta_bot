@@ -113,6 +113,29 @@ def like_a_post(username):
     else:
         print "Like unsuccessful"
 
+def get_comment_list(username):
+    media_id = get_post_id(username)
+    url = BASE_URL + "media/" + media_id + "/comments?access_token="+ACCESS_TOKEN
+    user_media = requests.get(url).json()
+    if user_media["meta"]["code"] == 200:
+        for comment in user_media["data"]:
+            print comment["text"]+"\n"
+    else:
+        print "Error"
+
+
+
+def post_a_comment(username):
+    media_id = get_post_id(username)
+    comment = raw_input("Your comment: ")
+    payload = {"access_token": ACCESS_TOKEN, "text" : comment}
+    url = BASE_URL + "media/"+media_id+"/comments"
+    make_comment = requests.post(url, payload).json()
+    if make_comment['meta']['code'] == 200:
+        print "added a new comment!"
+    else:
+        print "Failed"
+
 
 def home():
     running=True
@@ -124,6 +147,8 @@ def home():
         print "4.Get Other Post"
         print "5.Get recent media liked by the user"
         print "6.Like a Post"
+        print "7.Get List of comments"
+        print "8.Comment on a Post"
         choice=raw_input("")
         if choice=="1":
             get_self_info()
@@ -134,15 +159,21 @@ def home():
             image_id=get_self_post()
             print "Downloaded "+str(image_id)+".jpg"
         elif choice=="4":
-            user_id=raw_input("Enter UserName: ")
-            image_id = get_other_post(get_user_id(user_id))
+            username=raw_input("Enter UserName: ")
+            image_id = get_other_post(get_user_id(username))
             print "Downloaded " + str(image_id) + ".jpg"
         elif choice == "5":
             id=get_media_likes()
             print "Downloaded " + str(id) + ".jpg"
         elif choice == "6":
-            user_id = raw_input("Enter UserName: ")
-            like_a_post(user_id)
+            username = raw_input("Enter UserName: ")
+            like_a_post(username)
+        elif choice == "7":
+            username = raw_input("Enter UserName: ")
+            get_comment_list(username)
+        elif choice == "8":
+            username = raw_input("Enter UserName: ")
+            post_a_comment(username)
         else:
             running=False
         print "\n"
