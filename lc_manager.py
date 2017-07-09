@@ -1,28 +1,13 @@
-import requests, urllib
+import requests
 from token import ACCESS_TOKEN
 from id_manager import get_post_id
 BASE_URL = "https://api.instagram.com/v1/"
 
-def get_media_likes():
-    url = BASE_URL + "users/self/media/liked/?access_token=" + ACCESS_TOKEN
-    self_media = requests.get(url).json()
-    if self_media["meta"]["code"] == 200:
-        if len(self_media["data"]):
-            image_id = self_media["data"][0]["id"]
-            image_url = self_media["data"][0]["images"]["standard_resolution"]["url"]
-            urllib.urlretrieve(image_url, image_id + ".jpeg")
-            return image_id
-        else:
-            print "No Recent liked Media found"
-            return 0
-    else:
-        print "Error" + self_media["meta"]["code"]
-        return 0
 
 def like_a_post(username):
     media_id = get_post_id(username)
-    if media_id==None:
-        return
+    if media_id == -1:
+        return -1
     url = BASE_URL + "media/" + media_id+ "/likes"
     payload = {"access_token": ACCESS_TOKEN}
     post_a_like = requests.post(url, payload).json()
@@ -33,16 +18,24 @@ def like_a_post(username):
 
 def get_comment_list(username):
     media_id = get_post_id(username)
+    if media_id == -1:
+        return -1
     url = BASE_URL + "media/" + media_id + "/comments?access_token="+ACCESS_TOKEN
     user_media = requests.get(url).json()
     if user_media["meta"]["code"] == 200:
+        s_no=1
         for comment in user_media["data"]:
-            print comment["text"]+"\n"
+            print str(s_no) + "."+comment["text"]
+            s_no+=1
+        if s_no == 1:
+            print "No Comments Found"
     else:
-        print "Error"
+        print "Error" + user_media["meta"]["code"]
 
 def post_a_comment(username):
     media_id = get_post_id(username)
+    if media_id == -1:
+        return -1
     comment = raw_input("Your comment: ")
     payload = {"access_token": ACCESS_TOKEN, "text" : comment}
     url = BASE_URL + "media/"+media_id+"/comments"
@@ -50,4 +43,4 @@ def post_a_comment(username):
     if make_comment['meta']['code'] == 200:
         print "added a new comment!"
     else:
-        print "Failed"
+        print "Error" + make_comment["meta"]["code"]
