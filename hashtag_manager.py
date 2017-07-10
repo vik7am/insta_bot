@@ -1,6 +1,12 @@
 import requests
-from token import ACCESS_TOKEN
+import matplotlib.pyplot as plt; plt.rcdefaults()
+import numpy as np
+import matplotlib.pyplot as plt
+
+from mytoken import ACCESS_TOKEN
 from id_manager import get_user_id
+
+
 BASE_URL = "https://api.instagram.com/v1/"
 
 
@@ -41,11 +47,23 @@ def find_images():
                 counter+=1
         IMAGE.append(counter)
 
+def draw_graph():
+    objects = HASHTAG
+    y_pos = np.arange(len(objects))
+    performance = IMAGE
+
+    plt.bar(y_pos, performance, align='center', alpha=0.5)
+    plt.xticks(y_pos, objects)
+    plt.ylabel('No of images')
+    plt.title("Trend analysis")
+
+    plt.show()
+
 def get_image_with_hashtag(username):
     user_id=get_user_id(username)
     find_hashtag(user_id)
     find_images()
-
+    draw_graph()
     sno = 0
     for h in HASHTAG:
         print str(sno+1) + h + " : " +str(IMAGE[sno])
