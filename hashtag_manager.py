@@ -3,10 +3,12 @@ from token import ACCESS_TOKEN
 from id_manager import get_user_id
 BASE_URL = "https://api.instagram.com/v1/"
 
-HASHTAG=[]
+
 CAPTION=[]
+HASHTAG=[]
+IMAGE=[]
 def find_hashtag(user_id):
-    counter=0
+    #counter=0
     url = BASE_URL + "users/" + user_id + "/media/recent/?access_token=" + ACCESS_TOKEN
     user_media = requests.get(url).json()
     if user_media["meta"]["code"] == 200:
@@ -21,13 +23,6 @@ def find_hashtag(user_id):
                 if str(word).find("#") != -1:
                     if find_duplicates(word):
                         HASHTAG.append(word)
-
-
-        sno=1
-        for h in HASHTAG:
-            print str(sno)+h
-            sno+=1
-        return counter
     else:
         print "Error" + user_media["meta"]["code"]
         return -1
@@ -38,11 +33,20 @@ def find_duplicates(word):
             return False
     return True
 
-
-
-
+def find_images():
+    for hashtag in HASHTAG:
+        counter=0
+        for caption in CAPTION:
+            if str(caption).find(hashtag)>=0:
+                counter+=1
+        IMAGE.append(counter)
 
 def get_image_with_hashtag(username):
     user_id=get_user_id(username)
     find_hashtag(user_id)
-    #print "No of images with "+hashtag+" : "+str(no_of_images)
+    find_images()
+
+    sno = 0
+    for h in HASHTAG:
+        print str(sno+1) + h + " : " +str(IMAGE[sno])
+        sno += 1
