@@ -75,7 +75,6 @@ def get_all_media(user_id,criteria,value):
         return -1
 
 
-
 def get_other_post_by_criteria(user_id):
     print "1.Get post by min no of likes"
     print "2.Get post by text in caption"
