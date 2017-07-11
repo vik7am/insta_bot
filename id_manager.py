@@ -17,7 +17,7 @@ def get_self_info():
         print "Error: "+self_info["meta"]["code"]
 
 def get_user_id(username):
-    url = BASE_URL + "users/search?q="+username+"&access_token=" +ACCESS_TOKEN
+    url = BASE_URL + "users/search?q=" + username + "&access_token=" + ACCESS_TOKEN
     user_info = requests.get(url).json()
     if user_info["meta"]["code"] == 200:
         if len(user_info["data"]) == 1:

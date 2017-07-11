@@ -3,8 +3,7 @@ from mytoken import ACCESS_TOKEN
 from id_manager import get_post_id
 BASE_URL = "https://api.instagram.com/v1/"
 
-
-def like_a_post(username):
+def like_recent_post(username):
     media_id = get_post_id(username)
     if media_id == -1:
         return -1
@@ -14,13 +13,14 @@ def like_a_post(username):
     if post_a_like["meta"]["code"] == 200:
         print "Like successful"
     else:
-        print "Like unsuccessful"
+        print "Like failed"
+        print "Error" + post_a_like["meta"]["code"]
 
 def get_comment_list(username):
     media_id = get_post_id(username)
     if media_id == -1:
         return -1
-    url = BASE_URL + "media/" + media_id + "/comments?access_token="+ACCESS_TOKEN
+    url = BASE_URL + "media/" + media_id + "/comments?access_token=" + ACCESS_TOKEN
     user_media = requests.get(url).json()
     if user_media["meta"]["code"] == 200:
         s_no=1
@@ -32,15 +32,16 @@ def get_comment_list(username):
     else:
         print "Error" + user_media["meta"]["code"]
 
-def post_a_comment(username):
+def post_comment(username):
     media_id = get_post_id(username)
     if media_id == -1:
         return -1
     comment = raw_input("Your comment: ")
-    payload = {"access_token": ACCESS_TOKEN, "text" : comment}
-    url = BASE_URL + "media/"+media_id+"/comments"
+    payload = {"access_token": ACCESS_TOKEN, "text": comment}
+    url = BASE_URL + "media/" + media_id + "/comments"
     make_comment = requests.post(url, payload).json()
     if make_comment['meta']['code'] == 200:
-        print "added a new comment!"
+        print "Added a new comment"
     else:
+        print "Comment failed"
         print "Error" + make_comment["meta"]["code"]

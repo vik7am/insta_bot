@@ -1,8 +1,6 @@
 import requests, urllib
-import os
 from mytoken import ACCESS_TOKEN
 BASE_URL = "https://api.instagram.com/v1/"
-
 
 def get_self_post():
     url = BASE_URL + "users/self/media/recent/?access_token="+ ACCESS_TOKEN
@@ -17,10 +15,10 @@ def get_self_post():
             print "No Recent Post exist"
             return -1
     else:
-        print "Status code other than 200 received!"
+        print "Error" + self_media["meta"]["code"]
         return -1
 
-def get_media_liked():
+def get_post_liked():
     url = BASE_URL + "users/self/media/liked/?access_token=" + ACCESS_TOKEN
     self_media = requests.get(url).json()
     if self_media["meta"]["code"] == 200:
@@ -36,7 +34,7 @@ def get_media_liked():
         print "Error" + self_media["meta"]["code"]
         return -1
 
-def get_other_post(user_id):
+def get_user_post(user_id):
     url = BASE_URL + "users/" + user_id + "/media/recent/?access_token=" + ACCESS_TOKEN
     self_media = requests.get(url).json()
     if self_media["meta"]["code"] == 200:
@@ -52,7 +50,7 @@ def get_other_post(user_id):
         print "Error" + self_media["meta"]["code"]
         return -1
 
-def get_all_media(user_id,criteria,value):
+def get_user_post_by_criteria(user_id,criteria,value):
     ID=[]
     url = BASE_URL + "users/" + user_id + "/media/recent/?access_token=" + ACCESS_TOKEN
     user_media = requests.get(url).json()
@@ -66,22 +64,25 @@ def get_all_media(user_id,criteria,value):
                 if str(media["caption"]).find(value) != -1:
                     ID.append(media["id"])
                     urllib.urlretrieve(media["images"]["standard_resolution"]["url"], media["id"] + ".jpeg")
-        print "Name of downloaded images"
-        for id in ID:
-            print str(id)+".jpg"
-
+        if ID.__len__() == 0:
+            print "No post found with given criteria"
+        else:
+            print "Name of downloaded images"
+            for id in ID:
+                print str(id) + ".jpg"
     else:
         print "Error" + user_media["meta"]["code"]
-        return -1
 
 
-def get_other_post_by_criteria(user_id):
+def show_user_post_by_criteria(user_id):
     print "1.Get post by min no of likes"
     print "2.Get post by text in caption"
     criteria=raw_input("")
     if criteria == "1":
         value=raw_input("Enter minimum no of likes: ")
-        get_all_media(user_id,criteria,value)
+        get_user_post_by_criteria(user_id,criteria,value)
     elif criteria == "2":
         value=raw_input("Enter text: ")
-        get_all_media(user_id, criteria,value)
+        get_user_post_by_criteria(user_id, criteria,value)
+    else:
+        print "Invalid Option"
