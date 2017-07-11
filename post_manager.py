@@ -1,5 +1,5 @@
 import requests, urllib
-from token import ACCESS_TOKEN
+from mytoken import ACCESS_TOKEN
 BASE_URL = "https://api.instagram.com/v1/"
 
 

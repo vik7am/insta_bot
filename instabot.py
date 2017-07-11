@@ -58,8 +58,8 @@ def home():
 
         elif choice == "9":
             username = raw_input("Enter UserName: ")
-            hashtag = raw_input("Enter Hashtag: ")
-            get_image_with_hashtag(username,hashtag)
+            #hashtag = raw_input("Enter Hashtag: ")
+            get_image_with_hashtag(username)
 
         else:
             running=False

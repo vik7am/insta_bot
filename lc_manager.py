@@ -1,5 +1,5 @@
 import requests
-from token import ACCESS_TOKEN
+from mytoken import ACCESS_TOKEN
 from id_manager import get_post_id
 BASE_URL = "https://api.instagram.com/v1/"
 
