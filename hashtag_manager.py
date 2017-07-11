@@ -6,19 +6,15 @@ import matplotlib.pyplot as plt
 from mytoken import ACCESS_TOKEN
 from id_manager import get_user_id
 
-
 BASE_URL = "https://api.instagram.com/v1/"
-
 
 CAPTION=[]
 HASHTAG=[]
 IMAGE=[]
 def find_hashtag(user_id):
-    #counter=0
     url = BASE_URL + "users/" + user_id + "/media/recent/?access_token=" + ACCESS_TOKEN
     user_media = requests.get(url).json()
     if user_media["meta"]["code"] == 200:
-        #length=len(user_media["data"])
         for media in user_media["data"]:
             caption=media["caption"]["text"]
             CAPTION.append(caption)
@@ -62,6 +58,9 @@ def draw_graph():
 def get_image_with_hashtag(username):
     user_id=get_user_id(username)
     find_hashtag(user_id)
+    if HASHTAG.__len__() == 0:
+        print "No Trending Hashtags"
+        return -1
     find_images()
     draw_graph()
     sno = 0
