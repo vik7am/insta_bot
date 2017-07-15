@@ -1,6 +1,6 @@
 from id_manager import get_self_info,get_user_id
 from post_manager import get_self_post,get_user_post,get_post_liked,show_user_post_by_criteria
-from lc_manager import like_recent_post,get_comment_list,post_comment
+from lc_manager import like_recent_post,get_comment_list,post_comment,delete_comment
 from hashtag_manager import show_trending_hashtags
 BASE_URL = "https://api.instagram.com/v1/"
 
@@ -56,7 +56,9 @@ def other_user_profile(username):
         print "4.Like recent post"
         print "5.List of comments on recent post"
         print "6.Make comment on recent a post"
-        print "7.Find trending HashTags"
+        print "7.Delete all comments on recent post"
+        print "8.Find trending HashTags"
+
         print "0.Go to self profile"
         choice=raw_input("")
         if choice == "1":
@@ -74,6 +76,8 @@ def other_user_profile(username):
         elif choice == "6":
             post_comment(username)
         elif choice == "7":
+            delete_comment(username)
+        elif choice == "8":
             show_trending_hashtags(username)
         else:
             running=False

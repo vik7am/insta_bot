@@ -46,3 +46,15 @@ def get_post_id(username):
     else:
         print "Error" + str(user_media["meta"]["code"])
         return -1
+
+def get_comment_id(media_id):
+    COMMENT=[]
+    url = BASE_URL + "media/" + media_id + "/comments?access_token=" + ACCESS_TOKEN
+    user_media = requests.get(url).json()
+    if user_media["meta"]["code"] == 200:
+        for comment in user_media["data"]:
+            COMMENT.append(comment["id"])
+        return COMMENT
+    else:
+        print "Error ID " + str(user_media["meta"]["code"])
+        return COMMENT
