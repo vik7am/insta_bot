@@ -24,7 +24,7 @@ def find_hashtag(user_id):
                     if find_duplicates(word):
                         HASHTAG.append(word)
     else:
-        print "Error" + user_media["meta"]["code"]
+        print "Error" + str(user_media["meta"]["code"])
 
 def find_duplicates(word):
     for hashtag in HASHTAG:

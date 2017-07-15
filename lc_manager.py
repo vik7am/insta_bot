@@ -14,7 +14,7 @@ def like_recent_post(username):
         print "Like successful"
     else:
         print "Like failed"
-        print "Error" + post_a_like["meta"]["code"]
+        print "Error" + str(post_a_like["meta"]["code"])
 
 def get_comment_list(username):
     media_id = get_post_id(username)
@@ -30,7 +30,7 @@ def get_comment_list(username):
         if s_no == 1:
             print "No Comments Found"
     else:
-        print "Error" + user_media["meta"]["code"]
+        print "Error" + str(user_media["meta"]["code"])
 
 def post_comment(username):
     media_id = get_post_id(username)
@@ -44,4 +44,4 @@ def post_comment(username):
         print "Added a new comment"
     else:
         print "Comment failed"
-        print "Error" + make_comment["meta"]["code"]
+        print "Error" + str(make_comment["meta"]["code"])

@@ -14,7 +14,7 @@ def get_self_info():
         else:
             print "Invalid Username"
     else:
-        print "Error: "+self_info["meta"]["code"]
+        print "Error: "+str(self_info["meta"]["code"])
 
 def get_user_id(username):
     url = BASE_URL + "users/search?q=" + username + "&access_token=" + ACCESS_TOKEN
@@ -24,9 +24,10 @@ def get_user_id(username):
             return user_info["data"][0]["id"]
         else:
             print "Invalid user name"
-            return -1
+            id=raw_input("enter user id manualy")
+            return id
     else:
-        print "Error"+user_info["meta"]["code"]
+        print "Error"+str(user_info["meta"]["code"])
         return -1
 
 def get_post_id(username):
@@ -43,5 +44,5 @@ def get_post_id(username):
             print "No Recent liked Media found"
             return -1
     else:
-        print "Error" + user_media["meta"]["code"]
+        print "Error" + str(user_media["meta"]["code"])
         return -1

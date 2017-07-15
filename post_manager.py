@@ -15,7 +15,7 @@ def get_self_post():
             print "No Recent Post exist"
             return -1
     else:
-        print "Error" + self_media["meta"]["code"]
+        print "Error" + str(self_media["meta"]["code"])
         return -1
 
 def get_post_liked():
@@ -31,7 +31,7 @@ def get_post_liked():
             print "No Recent liked Media found"
             return -1
     else:
-        print "Error" + self_media["meta"]["code"]
+        print "Error" + str(self_media["meta"]["code"])
         return -1
 
 def get_user_post(user_id):
@@ -47,7 +47,7 @@ def get_user_post(user_id):
             print "No Recent Post exist"
             return -1
     else:
-        print "Error" + self_media["meta"]["code"]
+        print "Error" + str(str(self_media["meta"]["code"]))
         return -1
 
 def get_user_post_by_criteria(user_id,criteria,value):
@@ -71,7 +71,7 @@ def get_user_post_by_criteria(user_id,criteria,value):
             for id in ID:
                 print str(id) + ".jpg"
     else:
-        print "Error" + user_media["meta"]["code"]
+        print "Error" + str(user_media["meta"]["code"])
 
 
 def show_user_post_by_criteria(user_id):
